@@ -8,5 +8,6 @@ class Property extends ActiveRecord\Model
 		'property_amenities',
 		array('amenities', 'through' => 'property_amenities')
 	);
-};
+}
+
 ?>

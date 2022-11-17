@@ -142,7 +142,10 @@ class SQLBuilder
 		return $this;
 	}
 
-	public function insert($hash, $pk=null, $sequence_name=null)
+    /**
+     * @throws ActiveRecordException
+     */
+    public function insert($hash, $pk=null, $sequence_name=null)
 	{
 		if (!is_hash($hash))
 			throw new ActiveRecordException('Inserting requires a hash.');
@@ -156,7 +159,10 @@ class SQLBuilder
 		return $this;
 	}
 
-	public function update($mixed)
+    /**
+     * @throws ActiveRecordException
+     */
+    public function update($mixed)
 	{
 		$this->operation = 'UPDATE';
 
@@ -211,7 +217,7 @@ class SQLBuilder
 	 * @param $map A hash of "mapped_column_name" => "real_column_name"
 	 * @return A conditions array in the form array(sql_string, value1, value2,...)
 	 */
-	public static function create_conditions_from_underscored_string(Connection $connection, $name, &$values=array(), &$map=null)
+	public static function create_conditions_from_underscored_string(Connection $connection, $name, $values=array(), $map=null)
 	{
 		if (!$name)
 			return null;
@@ -246,15 +252,15 @@ class SQLBuilder
 		return $conditions;
 	}
 
-	/**
-	 * Like create_conditions_from_underscored_string but returns a hash of name => value array instead.
-	 *
-	 * @param string $name A string containing attribute names connected with _and_ or _or_
-	 * @param $args Array of values for each attribute in $name
-	 * @param $map A hash of "mapped_column_name" => "real_column_name"
-	 * @return array A hash of array(name => value, ...)
-	 */
-	public static function create_hash_from_underscored_string($name, &$values=array(), &$map=null)
+    /**
+     * Like create_conditions_from_underscored_string but returns a hash of name => value array instead.
+     *
+     * @param string $name A string containing attribute names connected with _and_ or _or_
+     * @param array $values
+     * @param null $map A hash of "mapped_column_name" => "real_column_name"
+     * @return array A hash of array(name => value, ...)
+     */
+	public static function create_hash_from_underscored_string($name, $values=array(), $map=null)
 	{
 		$parts = preg_split('/(_and_|_or_)/i',$name);
 		$hash = array();
@@ -289,7 +295,10 @@ class SQLBuilder
 		return $new;
 	}
 
-	private function apply_where_conditions($args)
+    /**
+     * @throws ExpressionsException
+     */
+    private function apply_where_conditions($args)
 	{
 		require_once 'Expressions.php';
 		$num_args = count($args);
@@ -306,7 +315,7 @@ class SQLBuilder
 			// if the values has a nested array then we'll need to use Expressions to expand the bind marker for us
 			$values = array_slice($args,1);
 
-			foreach ($values as $name => &$value)
+			foreach ($values as $name => $value)
 			{
 				if (is_array($value))
 				{
@@ -343,7 +352,10 @@ class SQLBuilder
 		return $sql;
 	}
 
-	private function build_insert()
+    /**
+     * @throws ExpressionsException
+     */
+    private function build_insert()
 	{
 		require_once 'Expressions.php';
 		$keys = join(',',$this->quoted_key_names());

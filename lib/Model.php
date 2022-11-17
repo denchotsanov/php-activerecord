@@ -1,4 +1,7 @@
-<?php
+<?php /** @noinspection PhpIllegalArrayKeyTypeInspection */
+/** @noinspection PhpIllegalArrayKeyTypeInspection */
+/** @noinspection PhpIllegalArrayKeyTypeInspection */
+
 /**
  * @package ActiveRecord
  */
@@ -244,23 +247,24 @@ class Model
 	 */
 	static $delegate = array();
 
-	/**
-	 * Constructs a model.
-	 *
-	 * When a user instantiates a new object (e.g.: it was not ActiveRecord that instantiated via a find)
-	 * then @var $attributes will be mapped according to the schema's defaults. Otherwise, the given
-	 * $attributes will be mapped via set_attributes_via_mass_assignment.
-	 *
-	 * <code>
-	 * new Person(array('first_name' => 'Tito', 'last_name' => 'the Grief'));
-	 * </code>
-	 *
-	 * @param array $attributes Hash containing names and values to mass assign to the model
-	 * @param boolean $guard_attributes Set to true to guard protected/non-accessible attributes
-	 * @param boolean $instantiating_via_find Set to true if this model is being created from a find call
-	 * @param boolean $new_record Set to true if this should be considered a new record
-	 * @return Model
-	 */
+    /**
+     * Constructs a model.
+     *
+     * When a user instantiates a new object (e.g.: it was not ActiveRecord that instantiated via a find)
+     * then @var $attributes will be mapped according to the schema's defaults. Otherwise, the given
+     * $attributes will be mapped via set_attributes_via_mass_assignment.
+     *
+     * <code>
+     * new Person(array('first_name' => 'Tito', 'last_name' => 'the Grief'));
+     * </code>
+     *
+     * @param array $attributes Hash containing names and values to mass assign to the model
+     * @param boolean $guard_attributes Set to true to guard protected/non-accessible attributes
+     * @param boolean $instantiating_via_find Set to true if this model is being created from a find call
+     * @param boolean $new_record Set to true if this should be considered a new record
+     * @throws UndefinedPropertyException
+     * @return Model
+     */
 	public function __construct(array $attributes=array(), $guard_attributes=true, $instantiating_via_find=false, $new_record=true)
 	{
 		$this->__new_record = $new_record;
@@ -282,58 +286,59 @@ class Model
 		$this->invoke_callback('after_construct',false);
 	}
 
-	/**
-	 * Magic method which delegates to read_attribute(). This handles firing off getter methods,
-	 * as they are not checked/invoked inside of read_attribute(). This circumvents the problem with
-	 * a getter being accessed with the same name as an actual attribute.
-	 *
-	 * You can also define customer getter methods for the model.
-	 *
-	 * EXAMPLE:
-	 * <code>
-	 * class User extends ActiveRecord\Model {
-	 *
-	 *   # define custom getter methods. Note you must
-	 *   # prepend get_ to your method name:
-	 *   function get_middle_initial() {
-	 *     return $this->middle_name{0};
-	 *   }
-	 * }
-	 *
-	 * $user = new User();
-	 * echo $user->middle_name;  # will call $user->get_middle_name()
-	 * </code>
-	 *
-	 * If you define a custom getter with the same name as an attribute then you
-	 * will need to use read_attribute() to get the attribute's value.
-	 * This is necessary due to the way __get() works.
-	 *
-	 * For example, assume 'name' is a field on the table and we're defining a
-	 * custom getter for 'name':
-	 *
-	 * <code>
-	 * class User extends ActiveRecord\Model {
-	 *
-	 *   # INCORRECT way to do it
-	 *   # function get_name() {
-	 *   #   return strtoupper($this->name);
-	 *   # }
-	 *
-	 *   function get_name() {
-	 *     return strtoupper($this->read_attribute('name'));
-	 *   }
-	 * }
-	 *
-	 * $user = new User();
-	 * $user->name = 'bob';
-	 * echo $user->name; # => BOB
-	 * </code>
-	 *
-	 *
-	 * @see read_attribute()
-	 * @param string $name Name of an attribute
-	 * @return mixed The value of the attribute
-	 */
+    /**
+     * Magic method which delegates to read_attribute(). This handles firing off getter methods,
+     * as they are not checked/invoked inside of read_attribute(). This circumvents the problem with
+     * a getter being accessed with the same name as an actual attribute.
+     *
+     * You can also define customer getter methods for the model.
+     *
+     * EXAMPLE:
+     * <code>
+     * class User extends ActiveRecord\Model {
+     *
+     *   # define custom getter methods. Note you must
+     *   # prepend get_ to your method name:
+     *   function get_middle_initial() {
+     *     return $this->middle_name{0};
+     *   }
+     * }
+     *
+     * $user = new User();
+     * echo $user->middle_name;  # will call $user->get_middle_name()
+     * </code>
+     *
+     * If you define a custom getter with the same name as an attribute then you
+     * will need to use read_attribute() to get the attribute's value.
+     * This is necessary due to the way __get() works.
+     *
+     * For example, assume 'name' is a field on the table and we're defining a
+     * custom getter for 'name':
+     *
+     * <code>
+     * class User extends ActiveRecord\Model {
+     *
+     *   # INCORRECT way to do it
+     *   # function get_name() {
+     *   #   return strtoupper($this->name);
+     *   # }
+     *
+     *   function get_name() {
+     *     return strtoupper($this->read_attribute('name'));
+     *   }
+     * }
+     *
+     * $user = new User();
+     * $user->name = 'bob';
+     * echo $user->name; # => BOB
+     * </code>
+     *
+     *
+     * @param string $name Name of an attribute
+     * @return mixed The value of the attribute
+     * @throws UndefinedPropertyException
+     * @see read_attribute()
+     */
 	public function &__get($name)
 	{
 		// check for getter
@@ -592,7 +597,7 @@ class Model
 	/**
 	 * Retrieve the primary key name.
 	 *
-	 * @param boolean Set to true to return the first value in the pk array only
+	 * @param boolean $first Set to true to return the first value in the pk array only
 	 * @return string The primary key for the model
 	 */
 	public function get_primary_key($first=false)
@@ -680,7 +685,7 @@ class Model
 	 * @param array $delegate An array containing delegate data
 	 * @return delegated attribute name or null
 	 */
-	private function is_delegated($name, &$delegate)
+	private function is_delegated($name, $delegate)
 	{
 		if ($delegate['prefix'] != '')
 			$name = substr($name,strlen($delegate['prefix'])+1);
@@ -781,31 +786,34 @@ class Model
 		return $model;
 	}
 
-	/**
-	 * Save the model to the database.
-	 *
-	 * This function will automatically determine if an INSERT or UPDATE needs to occur.
-	 * If a validation or a callback for this model returns false, then the model will
-	 * not be saved and this will return false.
-	 *
-	 * If saving an existing model only data that has changed will be saved.
-	 *
-	 * @param boolean $validate Set to true or false depending on if you want the validators to run or not
-	 * @return boolean True if the model was saved to the database otherwise false
-	 */
+    /**
+     * Save the model to the database.
+     *
+     * This function will automatically determine if an INSERT or UPDATE needs to occur.
+     * If a validation or a callback for this model returns false, then the model will
+     * not be saved and this will return false.
+     *
+     * If saving an existing model only data that has changed will be saved.
+     *
+     * @param boolean $validate Set to true or false depending on if you want the validators to run or not
+     * @return boolean True if the model was saved to the database otherwise false
+     * @throws ActiveRecordException
+     * @throws ReadOnlyException
+     */
 	public function save($validate=true)
 	{
 		$this->verify_not_readonly('save');
 		return $this->is_new_record() ? $this->insert($validate) : $this->update($validate);
 	}
 
-	/**
-	 * Issue an INSERT sql statement for this model's attribute.
-	 *
-	 * @see save
-	 * @param boolean $validate Set to true or false depending on if you want the validators to run or not
-	 * @return boolean True if the model was saved to the database otherwise false
-	 */
+    /**
+     * Issue an INSERT sql statement for this model's attribute.
+     *
+     * @param boolean $validate Set to true or false depending on if you want the validators to run or not
+     * @return boolean True if the model was saved to the database otherwise false
+     * @throws ReadOnlyException
+     * @see save
+     */
 	private function insert($validate=true)
 	{
 		$this->verify_not_readonly('insert');
@@ -859,13 +867,15 @@ class Model
 		return true;
 	}
 
-	/**
-	 * Issue an UPDATE sql statement for this model's dirty attributes.
-	 *
-	 * @see save
-	 * @param boolean $validate Set to true or false depending on if you want the validators to run or not
-	 * @return boolean True if the model was saved to the database otherwise false
-	 */
+    /**
+     * Issue an UPDATE sql statement for this model's dirty attributes.
+     *
+     * @param boolean $validate Set to true or false depending on if you want the validators to run or not
+     * @return boolean True if the model was saved to the database otherwise false
+     * @throws ActiveRecordException
+     * @throws ReadOnlyException
+     * @see save
+     */
 	private function update($validate=true)
 	{
 		$this->verify_not_readonly('update');
@@ -907,40 +917,42 @@ class Model
 		return $table->cache_key_for_model($this->values_for_pk());
 	}
 
-	/**
-	 * Deletes records matching conditions in $options
-	 *
-	 * Does not instantiate models and therefore does not invoke callbacks
-	 *
-	 * Delete all using a hash:
-	 *
-	 * <code>
-	 * YourModel::delete_all(array('conditions' => array('name' => 'Tito')));
-	 * </code>
-	 *
-	 * Delete all using an array:
-	 *
-	 * <code>
-	 * YourModel::delete_all(array('conditions' => array('name = ?', 'Tito')));
-	 * </code>
-	 *
-	 * Delete all using a string:
-	 *
-	 * <code>
-	 * YourModel::delete_all(array('conditions' => 'name = "Tito"'));
-	 * </code>
-	 *
-	 * An options array takes the following parameters:
-	 *
-	 * <ul>
-	 * <li><b>conditions:</b> Conditions using a string/hash/array</li>
-	 * <li><b>limit:</b> Limit number of records to delete (MySQL & Sqlite only)</li>
-	 * <li><b>order:</b> A SQL fragment for ordering such as: 'name asc', 'id desc, name asc' (MySQL & Sqlite only)</li>
-	 * </ul>
-	 *
-	 * @params array $options
-	 * return integer Number of rows affected
-	 */
+    /**
+     * Deletes records matching conditions in $options
+     *
+     * Does not instantiate models and therefore does not invoke callbacks
+     *
+     * Delete all using a hash:
+     *
+     * <code>
+     * YourModel::delete_all(array('conditions' => array('name' => 'Tito')));
+     * </code>
+     *
+     * Delete all using an array:
+     *
+     * <code>
+     * YourModel::delete_all(array('conditions' => array('name = ?', 'Tito')));
+     * </code>
+     *
+     * Delete all using a string:
+     *
+     * <code>
+     * YourModel::delete_all(array('conditions' => 'name = "Tito"'));
+     * </code>
+     *
+     * An options array takes the following parameters:
+     *
+     * <ul>
+     * <li><b>conditions:</b> Conditions using a string/hash/array</li>
+     * <li><b>limit:</b> Limit number of records to delete (MySQL & Sqlite only)</li>
+     * <li><b>order:</b> A SQL fragment for ordering such as: 'name asc', 'id desc, name asc' (MySQL & Sqlite only)</li>
+     * </ul>
+     *
+     * @params array $options
+     * return integer Number of rows affected
+     * @throws DatabaseException
+     * @throws ActiveRecordException
+     */
 	public static function delete_all($options=array())
 	{
 		$table = static::table();
@@ -965,35 +977,38 @@ class Model
 		return $ret->rowCount();
 	}
 
-	/**
-	 * Updates records using set in $options
-	 *
-	 * Does not instantiate models and therefore does not invoke callbacks
-	 *
-	 * Update all using a hash:
-	 *
-	 * <code>
-	 * YourModel::update_all(array('set' => array('name' => "Bob")));
-	 * </code>
-	 *
-	 * Update all using a string:
-	 *
-	 * <code>
-	 * YourModel::update_all(array('set' => 'name = "Bob"'));
-	 * </code>
-	 *
-	 * An options array takes the following parameters:
-	 *
-	 * <ul>
-	 * <li><b>set:</b> String/hash of field names and their values to be updated with
-	 * <li><b>conditions:</b> Conditions using a string/hash/array</li>
-	 * <li><b>limit:</b> Limit number of records to update (MySQL & Sqlite only)</li>
-	 * <li><b>order:</b> A SQL fragment for ordering such as: 'name asc', 'id desc, name asc' (MySQL & Sqlite only)</li>
-	 * </ul>
-	 *
-	 * @params array $options
-	 * return integer Number of rows affected
-	 */
+    /**
+     * Updates records using set in $options
+     *
+     * Does not instantiate models and therefore does not invoke callbacks
+     *
+     * Update all using a hash:
+     *
+     * <code>
+     * YourModel::update_all(array('set' => array('name' => "Bob")));
+     * </code>
+     *
+     * Update all using a string:
+     *
+     * <code>
+     * YourModel::update_all(array('set' => 'name = "Bob"'));
+     * </code>
+     *
+     * An options array takes the following parameters:
+     *
+     * <ul>
+     * <li><b>set:</b> String/hash of field names and their values to be updated with
+     * <li><b>conditions:</b> Conditions using a string/hash/array</li>
+     * <li><b>limit:</b> Limit number of records to update (MySQL & Sqlite only)</li>
+     * <li><b>order:</b> A SQL fragment for ordering such as: 'name asc', 'id desc, name asc' (MySQL & Sqlite only)</li>
+     * </ul>
+     *
+     * @params array $options
+     * return integer Number of rows affected
+     * @throws DatabaseException
+     * @throws ActiveRecordException
+     * @throws ActiveRecordException
+     */
 	public static function update_all($options=array())
 	{
 		$table = static::table();
@@ -1022,11 +1037,13 @@ class Model
 
 	}
 
-	/**
-	 * Deletes this model from the database and returns true if successful.
-	 *
-	 * @return boolean
-	 */
+    /**
+     * Deletes this model from the database and returns true if successful.
+     *
+     * @return boolean
+     * @throws ActiveRecordException
+     * @throws ReadOnlyException
+     */
 	public function delete()
 	{
 		$this->verify_not_readonly('delete');
@@ -1110,7 +1127,7 @@ class Model
 	 */
 	public function is_dirty()
 	{
-		return empty($this->__dirty) ? false : true;
+		return !empty($this->__dirty);
 	}
 
 	/**
@@ -1161,28 +1178,31 @@ class Model
 		return $this->save();
 	}
 
-	/**
-	 * Updates a single attribute and saves the record without going through the normal validation procedure.
-	 *
-	 * @param string $name Name of attribute
-	 * @param mixed $value Value of the attribute
-	 * @return boolean True if successful otherwise false
-	 */
+    /**
+     * Updates a single attribute and saves the record without going through the normal validation procedure.
+     *
+     * @param string $name Name of attribute
+     * @param mixed $value Value of the attribute
+     * @return boolean True if successful otherwise false
+     * @throws ActiveRecordException
+     * @throws UndefinedPropertyException
+     */
 	public function update_attribute($name, $value)
 	{
 		$this->__set($name, $value);
 		return $this->update(false);
 	}
 
-	/**
-	 * Mass update the model with data from an attributes hash.
-	 *
-	 * Unlike update_attributes() this method only updates the model's data
-	 * but DOES NOT save it to the database.
-	 *
-	 * @see update_attributes
-	 * @param array $attributes An array containing data to update in the form array(name => value, ...)
-	 */
+    /**
+     * Mass update the model with data from an attributes hash.
+     *
+     * Unlike update_attributes() this method only updates the model's data
+     * but DOES NOT save it to the database.
+     *
+     * @param array $attributes An array containing data to update in the form array(name => value, ...)
+     * @throws UndefinedPropertyException
+     * @see update_attributes
+     */
 	public function set_attributes(array $attributes)
 	{
 		$this->set_attributes_via_mass_assignment($attributes, true);
@@ -1195,7 +1215,7 @@ class Model
 	 * @param array $attributes An array in the form array(name => value, ...)
 	 * @param boolean $guard_attributes Flag of whether or not protected/non-accessible attributes should be guarded
 	 */
-	private function set_attributes_via_mass_assignment(array &$attributes, $guard_attributes)
+	private function set_attributes_via_mass_assignment(array $attributes, $guard_attributes)
 	{
 		//access uninflected columns since that is what we would have in result set
 		$table = static::table();
@@ -1243,15 +1263,17 @@ class Model
 			throw new UndefinedPropertyException(get_called_class(),$exceptions);
 	}
 
-	/**
-	 * Add a model to the given named ($name) relationship.
-	 *
-	 * @internal This should <strong>only</strong> be used by eager load
-	 * @param Model $model
-	 * @param $name of relationship for this table
-	 * @return void
-	 */
-	public function set_relationship_from_eager_load(Model $model=null, $name)
+    /**
+     * Add a model to the given named ($name) relationship.
+     *
+     * @param Model $model
+     * @param $name of relationship for this table
+     * @return void
+     * @throws RelationshipException
+     * @throws RelationshipException
+     * @internal This should <strong>only</strong> be used by eager load
+     */
+	public function set_relationship_from_eager_load(Model $model, $name)
 	{
 		$table = static::table();
 
@@ -1272,11 +1294,13 @@ class Model
 		throw new RelationshipException("Relationship named $name has not been declared for class: {$table->class->getName()}");
 	}
 
-	/**
-	 * Reloads the attributes and relationships of this object from the database.
-	 *
-	 * @return Model
-	 */
+    /**
+     * Reloads the attributes and relationships of this object from the database.
+     *
+     * @return Model
+     * @throws RecordNotFound
+     * @throws UndefinedPropertyException
+     */
 	public function reload()
 	{
 		$this->__relationships = array();
@@ -1393,13 +1417,16 @@ class Model
 		throw new ActiveRecordException("Call to undefined method: $method");
 	}
 
-	/**
-	 * Enables the use of build|create for associations.
-	 *
-	 * @param string $method Name of method
-	 * @param mixed $args Method args
-	 * @return mixed An instance of a given {@link AbstractRelationship}
-	 */
+    /**
+     * Enables the use of build|create for associations.
+     *
+     * @param string $method Name of method
+     * @param mixed $args Method args
+     * @return mixed An instance of a given {@link AbstractRelationship}
+     * @throws ActiveRecordException
+     * @throws RelationshipException
+     * @throws RelationshipException
+     */
 	public function __call($method, $args)
 	{
 		//check for build|create_association methods
@@ -1436,23 +1463,24 @@ class Model
 		return call_user_func_array('static::find',array_merge(array('all'),func_get_args()));
 	}
 
-	/**
-	 * Get a count of qualifying records.
-	 *
-	 * <code>
-	 * YourModel::count(array('conditions' => 'amount > 3.14159265'));
-	 * </code>
-	 *
-	 * @see find
-	 * @return int Number of records that matched the query
-	 */
+    /**
+     * Get a count of qualifying records.
+     *
+     * <code>
+     * YourModel::count(array('conditions' => 'amount > 3.14159265'));
+     * </code>
+     *
+     * @return int Number of records that matched the query
+     * @throws ActiveRecordException
+     * @see find
+     */
 	public static function count(/* ... */)
 	{
 		$args = func_get_args();
 		$options = static::extract_and_validate_options($args);
 		$options['select'] = 'COUNT(*)';
 
-		if (!empty($args) && !is_null($args[0]) && !empty($args[0]))
+		if (!empty($args) && !empty($args[0]))
 		{
 			if (is_hash($args[0]))
 				$options['conditions'] = $args[0];
@@ -1480,7 +1508,7 @@ class Model
 	 */
 	public static function exists(/* ... */)
 	{
-		return call_user_func_array('static::count',func_get_args()) > 0 ? true : false;
+		return call_user_func_array('static::count',func_get_args()) > 0;
 	}
 
 	/**
@@ -1586,7 +1614,7 @@ class Model
 						$options['order'] = SQLBuilder::reverse_order($options['order']);
 
 					// fall thru
-
+                    break;
 			 	case 'first':
 					$options['limit'] = 1;
 					$options['offset'] = 0;
@@ -1700,13 +1728,14 @@ class Model
 		return static::table()->find_by_sql($sql, $values, true);
 	}
 
-	/**
-	 * Helper method to run arbitrary queries against the model's database connection.
-	 *
-	 * @param string $sql SQL to execute
-	 * @param array $values Bind values, if any, for the query
-	 * @return object A PDOStatement object
-	 */
+    /**
+     * Helper method to run arbitrary queries against the model's database connection.
+     *
+     * @param string $sql SQL to execute
+     * @param array $values Bind values, if any, for the query
+     * @return object A PDOStatement object
+     * @throws DatabaseException
+     */
 	public static function query($sql, $values=null)
 	{
 		return static::connection()->query($sql, $values);
@@ -1752,13 +1781,14 @@ class Model
 		return $ret;
 	}
 
-	/**
-	 * Pulls out the options hash from $array if any.
-	 *
-	 * @internal DO NOT remove the reference on $array.
-	 * @param array &$array An array
-	 * @return array A valid options array
-	 */
+    /**
+     * Pulls out the options hash from $array if any.
+     *
+     * @param array &$array An array
+     * @return array A valid options array
+     * @throws ActiveRecordException
+     * @internal DO NOT remove the reference on $array.
+     */
 	public static function extract_and_validate_options(array &$array)
 	{
 		$options = array();
@@ -1872,49 +1902,52 @@ class Model
 		return $serializer->to_s();
 	}
 
-	/**
-	 * Invokes the specified callback on this model.
-	 *
-	 * @param string $method_name Name of the call back to run.
-	 * @param boolean $must_exist Set to true to raise an exception if the callback does not exist.
-	 * @return boolean True if invoked or null if not
-	 */
+    /**
+     * Invokes the specified callback on this model.
+     *
+     * @param string $method_name Name of the call back to run.
+     * @param boolean $must_exist Set to true to raise an exception if the callback does not exist.
+     * @return boolean True if invoked or null if not
+     * @throws ActiveRecordException
+     */
 	private function invoke_callback($method_name, $must_exist=true)
 	{
 		return static::table()->callback->invoke($this,$method_name,$must_exist);
 	}
 
-	/**
-	 * Executes a block of code inside a database transaction.
-	 *
-	 * <code>
-	 * YourModel::transaction(function()
-	 * {
-	 *   YourModel::create(array("name" => "blah"));
-	 * });
-	 * </code>
-	 *
-	 * If an exception is thrown inside the closure the transaction will
-	 * automatically be rolled back. You can also return false from your
-	 * closure to cause a rollback:
-	 *
-	 * <code>
-	 * YourModel::transaction(function()
-	 * {
-	 *   YourModel::create(array("name" => "blah"));
-	 *   throw new Exception("rollback!");
-	 * });
-	 *
-	 * YourModel::transaction(function()
-	 * {
-	 *   YourModel::create(array("name" => "blah"));
-	 *   return false; # rollback!
-	 * });
-	 * </code>
-	 *
-	 * @param callable $closure The closure to execute. To cause a rollback have your closure return false or throw an exception.
-	 * @return boolean True if the transaction was committed, False if rolled back.
-	 */
+    /**
+     * Executes a block of code inside a database transaction.
+     *
+     * <code>
+     * YourModel::transaction(function()
+     * {
+     *   YourModel::create(array("name" => "blah"));
+     * });
+     * </code>
+     *
+     * If an exception is thrown inside the closure the transaction will
+     * automatically be rolled back. You can also return false from your
+     * closure to cause a rollback:
+     *
+     * <code>
+     * YourModel::transaction(function()
+     * {
+     *   YourModel::create(array("name" => "blah"));
+     *   throw new Exception("rollback!");
+     * });
+     *
+     * YourModel::transaction(function()
+     * {
+     *   YourModel::create(array("name" => "blah"));
+     *   return false; # rollback!
+     * });
+     * </code>
+     *
+     * @param callable $closure The closure to execute. To cause a rollback have your closure return false or throw an exception.
+     * @return boolean True if the transaction was committed, False if rolled back.
+     * @throws DatabaseException
+     * @throws DatabaseException
+     */
 	public static function transaction($closure)
 	{
 		$connection = static::connection();

@@ -63,7 +63,7 @@ function array_flatten(array $array)
 /**
  * Somewhat naive way to determine if an array is a hash.
  */
-function is_hash(&$array)
+function is_hash($array)
 {
 	if (!is_array($array))
 		return false;
@@ -75,7 +75,7 @@ function is_hash(&$array)
 /**
  * Strips a class name of any namespaces and namespace operator.
  *
- * @param string $class
+ * @param $class_name
  * @return string stripped class name
  * @access public
  */
@@ -116,8 +116,8 @@ function has_absolute_namespace($class_name)
 /**
  * Returns true if all values in $haystack === $needle
  * @param $needle
- * @param $haystack
- * @return unknown_type
+ * @param array $haystack
+ * @return boolean
  */
 function all($needle, array $haystack)
 {
@@ -129,7 +129,7 @@ function all($needle, array $haystack)
 	return true;
 }
 
-function collect(&$enumerable, $name_or_closure)
+function collect($enumerable, $name_or_closure)
 {
 	$ret = array();
 

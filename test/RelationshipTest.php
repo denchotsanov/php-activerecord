@@ -1,6 +1,6 @@
 <?php
 
-class NotModel {};
+class NotModel {}
 
 class AuthorWithNonModelRelationship extends ActiveRecord\Model
 {
@@ -23,7 +23,7 @@ class RelationshipTest extends DatabaseTest
 		Venue::$has_one = array();
 		Employee::$has_one = array(array('position'));
 		Host::$has_many = array(array('events', 'order' => 'id asc'));
-		
+
 		foreach ($this->relationship_names as $name)
 		{
 			if (preg_match("/$name/", $this->getName(), $match))
@@ -80,7 +80,7 @@ class RelationshipTest extends DatabaseTest
 	{
 		$this->assert_default_has_many($this->get_relationship());
 	}
-	
+
 	public function test_eager_load_with_empty_nested_includes()
 	{
 		$conditions['include'] = array('events'=>array());
@@ -107,7 +107,7 @@ class RelationshipTest extends DatabaseTest
 
         $this->assertEquals('Yeah Yeah Yeahs',$bill_events[0]->title);
     }
-	
+
 	/**
 	 * @expectedException ActiveRecord\RelationshipException
 	 */
@@ -265,7 +265,7 @@ class RelationshipTest extends DatabaseTest
 
 	public function test_has_many_with_explicit_class_name()
 	{
-		Venue::$has_many = array(array('explicit_class_name', 'class_name' => 'Event', 'order' => 'id asc'));;
+		Venue::$has_many = array(array('explicit_class_name', 'class_name' => 'Event', 'order' => 'id asc'));
 		$this->assert_default_has_many($this->get_relationship(), 'explicit_class_name');
 	}
 
@@ -747,5 +747,6 @@ class RelationshipTest extends DatabaseTest
 	{
 		Author::find(999999, array('include' => array('books')));
 	}
-};
+}
+
 ?>

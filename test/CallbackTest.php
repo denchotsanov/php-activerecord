@@ -35,13 +35,13 @@ class CallBackTest extends DatabaseTest
 		$venue->name = 'change me';
 		$venue->city = 'Awesome City';
 		$venue->save();
-		
+
 		$this->assert_true(VenueAfterCreate::exists(array('conditions'=>
 		     array('name'=>'changed!'))));
 		$this->assert_false(VenueAfterCreate::exists(array('conditions'=>
 		     array('name'=>'change me'))));
 	}
-	
+
 	public function test_generic_callback_was_auto_registered()
 	{
 		$this->assert_has_callback('after_construct');
@@ -290,5 +290,6 @@ class CallBackTest extends DatabaseTest
 		$this->assert_false($ret);
 		$this->assert_true(strpos(ActiveRecord\Table::load('VenueCB')->last_sql, 'UPDATE') === false);
 	}
-};
+}
+
 ?>

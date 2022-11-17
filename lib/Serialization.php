@@ -107,7 +107,7 @@ abstract class Serialization
 		$this->check_except();
 		$this->check_methods();
 		$this->check_include();
-		$this->check_only_method();        
+		$this->check_only_method();
 	}
 
 	private function check_only()
@@ -143,7 +143,7 @@ abstract class Serialization
 			}
 		}
 	}
-	
+
 	private function check_only_method()
 	{
 		if (isset($this->options['only_method']))
@@ -180,8 +180,8 @@ abstract class Serialization
 					elseif (!is_array($assoc))
 					{
 						$serialized = new $serializer_class($assoc, $options);
-						$this->attributes[$association] = $serialized->to_a();;
-					}
+						$this->attributes[$association] = $serialized->to_a();
+                    }
 					else
 					{
 						$includes = array();
@@ -200,7 +200,7 @@ abstract class Serialization
 					}
 
 				} catch (UndefinedPropertyException $e) {
-					;//move along
+                    //move along
 				}
 			}
 		}
@@ -242,7 +242,7 @@ abstract class Serialization
 	 * @return string
 	 */
 	abstract public function to_s();
-};
+}
 
 /**
  * Array serializer.
@@ -306,7 +306,7 @@ class XmlSerializer extends Serialization
 		$this->writer->endDocument();
 		$xml = $this->writer->outputMemory(true);
 
-		if (@$this->options['skip_instruct'] == true)
+		if (@$this->options['skip_instruct'])
 			$xml = preg_replace('/<\?xml version.*?\?>/','',$xml);
 
 		return $xml;
@@ -350,7 +350,7 @@ class CsvSerializer extends Serialization
 
   public function to_s()
   {
-    if (@$this->options['only_header'] == true) return $this->header();
+    if (@$this->options['only_header']) return $this->header();
     return $this->row();
   }
 

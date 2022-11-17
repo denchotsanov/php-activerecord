@@ -4,6 +4,8 @@
  */
 namespace ActiveRecord;
 
+use DateTimeInterface;
+
 /**
  * An extension of PHP's DateTime class to provide dirty flagging and easier formatting options.
  *
@@ -182,13 +184,13 @@ class DateTime extends \DateTime implements DateTimeInterface
 		$this->flag_dirty();
 		return parent::setTimezone($timezone);
 	}
-	
+
 	public function modify($modify)
 	{
 		$this->flag_dirty();
 		return parent::modify($modify);
 	}
-	
+
 	public function add($interval)
 	{
 		$this->flag_dirty();

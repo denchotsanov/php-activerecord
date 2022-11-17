@@ -16,7 +16,10 @@ class SqliteAdapter extends Connection
 
 	static $datetime_format = 'Y-m-d H:i:s';
 
-	protected function __construct($info)
+    /**
+     * @throws DatabaseException
+     */
+    protected function __construct($info)
 	{
 		if (!file_exists($info->host))
 			throw new DatabaseException("Could not find sqlite db: $info->host");
@@ -31,12 +34,18 @@ class SqliteAdapter extends Connection
 		return "$sql LIMIT {$offset}$limit";
 	}
 
-	public function query_column_info($table)
+    /**
+     * @throws DatabaseException
+     */
+    public function query_column_info($table)
 	{
 		return $this->query("pragma table_info($table)");
 	}
 
-	public function query_for_tables()
+    /**
+     * @throws DatabaseException
+     */
+    public function query_for_tables()
 	{
 		return $this->query("SELECT name FROM sqlite_master");
 	}
@@ -84,7 +93,10 @@ class SqliteAdapter extends Connection
 		return $c;
 	}
 
-	public function set_encoding($charset)
+    /**
+     * @throws ActiveRecordException
+     */
+    public function set_encoding($charset)
 	{
 		throw new ActiveRecordException("SqliteAdapter::set_charset not supported.");
 	}

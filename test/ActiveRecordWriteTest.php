@@ -10,7 +10,7 @@ class DirtyAuthor extends ActiveRecord\Model
 	{
 		$this->name = 'i saved';
 	}
-};
+}
 
 class AuthorWithoutSequence extends ActiveRecord\Model
 {
@@ -132,7 +132,7 @@ class ActiveRecordWriteTest extends DatabaseTest
 	public function test_update_attributes()
 	{
 		$book = Book::find(1);
-		$new_name = 'How to lose friends and alienate people'; // jax i'm worried about you
+		$new_name = 'How to lose friends and alienate people'; // jax I'm worried about you
 		$attrs = array('name' => $new_name);
 		$book->update_attributes($attrs);
 
@@ -441,4 +441,4 @@ class ActiveRecordWriteTest extends DatabaseTest
 		$this->assert_true($our_datetime === $author->some_date);
 	}
 
-};
+}

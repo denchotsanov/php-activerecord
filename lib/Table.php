@@ -409,11 +409,11 @@ class Table
 	 * @param $map array Hash of used_name => real_name
 	 * @return array Array with any aliases replaced with their read field name
 	 */
-	private function map_names(&$hash, &$map)
+	private function map_names(&$hash, $map)
 	{
 		$ret = array();
 
-		foreach ($hash as $name => &$value)
+		foreach ($hash as $name => $value)
 		{
 			if (array_key_exists($name,$map))
 				$name = $map[$name];
@@ -599,6 +599,6 @@ class Table
 
 		if (!empty($getters) || !empty($setters))
 			trigger_error('static::$getters and static::$setters are deprecated. Please define your setters and getters by declaring methods in your model prefixed with get_ or set_. See
-			http://www.phpactiverecord.org/projects/main/wiki/Utilities#attribute-setters and http://www.phpactiverecord.org/projects/main/wiki/Utilities#attribute-getters on how to make use of this option.', E_USER_DEPRECATED);
+			https://www.phpactiverecord.org/projects/main/wiki/Utilities#attribute-setters andhttps:///www.phpactiverecord.org/projects/main/wiki/Utilities#attribute-getters on how to make use of this option.', E_USER_DEPRECATED);
 	}
 }

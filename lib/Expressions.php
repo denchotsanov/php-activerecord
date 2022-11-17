@@ -11,7 +11,7 @@ namespace ActiveRecord;
  * 'name = :name AND author = :author'
  * 'id = IN(:ids)'
  * 'id IN(:subselect)'
- * 
+ *
  * @package ActiveRecord
  */
 class Expressions
@@ -90,7 +90,7 @@ class Expressions
 	public function to_s($substitute=false, &$options=null)
 	{
 		if (!$options) $options = array();
-		
+
 		$values = array_key_exists('values',$options) ? $options['values'] : $this->values;
 
 		$ret = "";
@@ -121,7 +121,7 @@ class Expressions
 		return $ret;
 	}
 
-	private function build_sql_from_hash(&$hash, $glue)
+	private function build_sql_from_hash($hash, $glue)
 	{
 		$sql = $g = "";
 
@@ -142,7 +142,7 @@ class Expressions
 		return array($sql,array_values($hash));
 	}
 
-	private function substitute(&$values, $substitute, $pos, $parameter_index)
+	private function substitute($values, $substitute, $pos, $parameter_index)
 	{
 		$value = $values[$parameter_index];
 

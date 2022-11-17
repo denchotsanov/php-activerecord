@@ -117,19 +117,20 @@ class Config extends Singleton
 		$initializer(parent::instance());
 	}
 
-	/**
-	 * Sets the list of database connection strings.
-	 *
-	 * <code>
-	 * $config->set_connections(array(
-	 *     'development' => 'mysql://username:password@127.0.0.1/database_name'));
-	 * </code>
-	 *
-	 * @param array $connections Array of connections
-	 * @param string $default_connection Optionally specify the default_connection
-	 * @return void
-	 * @throws ActiveRecord\ConfigException
-	 */
+    /**
+     * Sets the list of database connection strings.
+     *
+     * <code>
+     * $config->set_connections(array(
+     *     'development' => 'mysql://username:password@127.0.0.1/database_name'));
+     * </code>
+     *
+     * @param array $connections Array of connections
+     * @param string $default_connection Optionally specify the default_connection
+     * @return void
+     * @throws ActiveRecord\ConfigException
+     * @throws ConfigException
+     */
 	public function set_connections($connections, $default_connection=null)
 	{
 		if (!is_array($connections))
@@ -270,7 +271,10 @@ class Config extends Singleton
 		return $this->logger;
 	}
 
-	public function set_date_class($date_class)
+    /**
+     * @throws ConfigException
+     */
+    public function set_date_class($date_class)
 	{
 		try {
 			$klass = Reflections::instance()->add($date_class)->get($date_class);

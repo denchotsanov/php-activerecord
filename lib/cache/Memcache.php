@@ -7,17 +7,18 @@ class Memcache
 
 	private $memcache;
 
-	/**
-	 * Creates a Memcache instance.
-	 *
-	 * Takes an $options array w/ the following parameters:
-	 *
-	 * <ul>
-	 * <li><b>host:</b> host for the memcache server </li>
-	 * <li><b>port:</b> port for the memcache server </li>
-	 * </ul>
-	 * @param array $options
-	 */
+    /**
+     * Creates a Memcache instance.
+     *
+     * Takes an $options array w/ the following parameters:
+     *
+     * <ul>
+     * <li><b>host:</b> host for the memcache server </li>
+     * <li><b>port:</b> port for the memcache server </li>
+     * </ul>
+     * @param array $options
+     * @throws CacheException
+     */
 	public function __construct($options)
 	{
 		$this->memcache = new \Memcache();

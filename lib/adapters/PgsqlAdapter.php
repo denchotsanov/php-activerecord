@@ -6,7 +6,7 @@ namespace ActiveRecord;
 
 /**
  * Adapter for Postgres (not completed yet)
- * 
+ *
  * @package ActiveRecord
  */
 class PgsqlAdapter extends Connection
@@ -69,7 +69,7 @@ SQL;
 		return $this->query("SELECT tablename FROM pg_tables WHERE schemaname NOT IN('information_schema','pg_catalog')");
 	}
 
-	public function create_column(&$column)
+	public function create_column($column)
 	{
 		$c = new Column();
 		$c->inflected_name	= Inflector::instance()->variablize($column['field']);

@@ -88,17 +88,21 @@ abstract class Connection
 	 */
 	static $DEFAULT_PORT = 0;
 
-	/**
-	 * Retrieve a database connection.
-	 *
-	 * @param string $connection_string_or_connection_name A database connection string (ex. mysql://user:pass@host[:port]/dbname)
-	 *   Everything after the protocol:// part is specific to the connection adapter.
-	 *   OR
-	 *   A connection name that is set in ActiveRecord\Config
-	 *   If null it will use the default connection specified by ActiveRecord\Config->set_default_connection
-	 * @return Connection
-	 * @see parse_connection_url
-	 */
+    /**
+     * Retrieve a database connection.
+     *
+     * @param string $connection_string_or_connection_name A database connection string (ex. mysql://user:pass@host[:port]/dbname)
+     *   Everything after the protocol:// part is specific to the connection adapter.
+     *   OR
+     *   A connection name that is set in ActiveRecord\Config
+     *   If null it will use the default connection specified by ActiveRecord\Config->set_default_connection
+     * @return Connection
+     * @see parse_connection_url
+     * @throws DatabaseException
+     * @throws DatabaseException
+     * @throws DatabaseException
+     * @throws DatabaseException
+     */
 	public static function instance($connection_string_or_connection_name=null)
 	{
 		$config = Config::instance();
@@ -132,12 +136,13 @@ abstract class Connection
 		return $connection;
 	}
 
-	/**
-	 * Loads the specified class for an adapter.
-	 *
-	 * @param string $adapter Name of the adapter.
-	 * @return string The full name of the class including namespace.
-	 */
+    /**
+     * Loads the specified class for an adapter.
+     *
+     * @param string $adapter Name of the adapter.
+     * @return string The full name of the class including namespace.
+     * @throws DatabaseException
+     */
 	private static function load_adapter_class($adapter)
 	{
 		$class = ucwords($adapter) . 'Adapter';
@@ -151,28 +156,29 @@ abstract class Connection
 		return $fqclass;
 	}
 
-	/**
-	 * Use this for any adapters that can take connection info in the form below
-	 * to set the adapters connection info.
-	 *
-	 * <code>
-	 * protocol://username:password@host[:port]/dbname
-	 * protocol://urlencoded%20username:urlencoded%20password@host[:port]/dbname?decode=true
-	 * protocol://username:password@unix(/some/file/path)/dbname
-	 * </code>
-	 *
-	 * Sqlite has a special syntax, as it does not need a database name or user authentication:
-	 *
-	 * <code>
-	 * sqlite://file.db
-	 * sqlite://../relative/path/to/file.db
-	 * sqlite://unix(/absolute/path/to/file.db)
-	 * sqlite://windows(c%2A/absolute/path/to/file.db)
-	 * </code>
-	 *
-	 * @param string $connection_url A connection URL
-	 * @return object the parsed URL as an object.
-	 */
+    /**
+     * Use this for any adapters that can take connection info in the form below
+     * to set the adapters connection info.
+     *
+     * <code>
+     * protocol://username:password@host[:port]/dbname
+     * protocol://urlencoded%20username:urlencoded%20password@host[:port]/dbname?decode=true
+     * protocol://username:password@unix(/some/file/path)/dbname
+     * </code>
+     *
+     * Sqlite has a special syntax, as it does not need a database name or user authentication:
+     *
+     * <code>
+     * sqlite://file.db
+     * sqlite://../relative/path/to/file.db
+     * sqlite://unix(/absolute/path/to/file.db)
+     * sqlite://windows(c%2A/absolute/path/to/file.db)
+     * </code>
+     *
+     * @param string $connection_url A connection URL
+     * @return object the parsed URL as an object.
+     * @throws DatabaseException
+     */
 	public static function parse_connection_url($connection_url)
 	{
 		$url = @parse_url($connection_url);
@@ -237,12 +243,13 @@ abstract class Connection
 		return $info;
 	}
 
-	/**
-	 * Class Connection is a singleton. Access it via instance().
-	 *
-	 * @param array $info Array containing URL parts
-	 * @return Connection
-	 */
+    /**
+     * Class Connection is a singleton. Access it via instance().
+     *
+     * @param array $info Array containing URL parts
+     * @return Connection
+     * @throws DatabaseException
+     */
 	protected function __construct($info)
 	{
 		try {
@@ -303,13 +310,17 @@ abstract class Connection
 		return $this->connection->lastInsertId($sequence);
 	}
 
-	/**
-	 * Execute a raw SQL query on the database.
-	 *
-	 * @param string $sql Raw SQL string to execute.
-	 * @param array &$values Optional array of bind values
-	 * @return mixed A result set object
-	 */
+    /**
+     * Execute a raw SQL query on the database.
+     *
+     * @param string $sql Raw SQL string to execute.
+     * @param array &$values Optional array of bind values
+     * @return mixed A result set object
+     * @throws DatabaseException
+     * @throws DatabaseException
+     * @throws DatabaseException
+     * @throws DatabaseException
+     */
 	public function query($sql, &$values=array())
 	{
 		if ($this->logging)
@@ -338,13 +349,14 @@ abstract class Connection
 		return $sth;
 	}
 
-	/**
-	 * Execute a query that returns maximum of one row with one field and return it.
-	 *
-	 * @param string $sql Raw SQL string to execute.
-	 * @param array &$values Optional array of values to bind to the query.
-	 * @return string
-	 */
+    /**
+     * Execute a query that returns maximum of one row with one field and return it.
+     *
+     * @param string $sql Raw SQL string to execute.
+     * @param array &$values Optional array of values to bind to the query.
+     * @return string
+     * @throws DatabaseException
+     */
 	public function query_and_fetch_one($sql, &$values=array())
 	{
 		$sth = $this->query($sql, $values);
@@ -352,12 +364,13 @@ abstract class Connection
 		return $row[0];
 	}
 
-	/**
-	 * Execute a raw SQL query and fetch the results.
-	 *
-	 * @param string $sql Raw SQL string to execute.
-	 * @param Closure $handler Closure that will be passed the fetched results.
-	 */
+    /**
+     * Execute a raw SQL query and fetch the results.
+     *
+     * @param string $sql Raw SQL string to execute.
+     * @param Closure $handler Closure that will be passed the fetched results.
+     * @throws DatabaseException
+     */
 	public function query_and_fetch($sql, Closure $handler)
 	{
 		$sth = $this->query($sql);
@@ -382,27 +395,30 @@ abstract class Connection
 		return $tables;
 	}
 
-	/**
-	 * Starts a transaction.
-	 */
+    /**
+     * Starts a transaction.
+     * @throws DatabaseException
+     */
 	public function transaction()
 	{
 		if (!$this->connection->beginTransaction())
 			throw new DatabaseException($this);
 	}
 
-	/**
-	 * Commits the current transaction.
-	 */
+    /**
+     * Commits the current transaction.
+     * @throws DatabaseException
+     */
 	public function commit()
 	{
 		if (!$this->connection->commit())
 			throw new DatabaseException($this);
 	}
 
-	/**
-	 * Rollback a transaction.
-	 */
+    /**
+     * Rollback a transaction.
+     * @throws DatabaseException
+     */
 	public function rollback()
 	{
 		if (!$this->connection->rollback())

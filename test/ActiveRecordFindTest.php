@@ -332,7 +332,6 @@ class ActiveRecordFindTest extends DatabaseTest
 			$author->id;
 			$this->fail('expected ActiveRecord\UndefinedPropertyExecption');
 		} catch (ActiveRecord\UndefinedPropertyException $e) {
-			;
 		}
 	}
 
@@ -476,5 +475,6 @@ class ActiveRecordFindTest extends DatabaseTest
 		$this->assert_not_null(Author::find_by_created_at($now));
 		$this->assert_not_null(Author::find_by_created_at($arnow));
 	}
-};
+}
+
 ?>
