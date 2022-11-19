@@ -6,9 +6,7 @@
     "license": "MIT",
     "require": {
         "php": ">=8.0.0",
-        "ext-pdo": "*",
-        "ext-memcache": "*",
-        "ext-xmlwriter": "*"
+        "ext-pdo": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "4.*",
